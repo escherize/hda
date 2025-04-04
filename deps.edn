@@ -1,14 +1,15 @@
 ;; deps.edn
-{:paths ["dev" "src" "test"]
- :deps  {ring/ring-core                          {:mvn/version "1.9.0"}
-         ring/ring-jetty-adapter                 {:mvn/version "1.9.0"}
-         datascript/datascript                   {:mvn/version "1.7.4"}
-         io.github.tonsky/datascript-storage-sql {:mvn/version "2.0.0"}
-         mount/mount                             {:mvn/version "0.1.21"}
-         org.clojure/clojure                     {:mvn/version "1.12.0"}
-         org.xerial/sqlite-jdbc                  {:mvn/version "3.36.0.3"}
-         com.cognitect/transit-clj               {:mvn/version "1.0.333"}
-         io.github.escherize/huff                {:mvn/version "0.2.12"}
-         metosin/malli                           {:mvn/version "0.17.0"}
-         metosin/reitit                          {:mvn/version "0.8.0"}}
+{:paths   ["dev" "src" "test"]
+ :deps    {clj-commons/clj-yaml                    {:mvn/version "1.0.29"}
+           com.cognitect/transit-clj               {:mvn/version "1.0.333"}
+           datascript/datascript                   {:mvn/version "1.7.4"}
+           io.github.escherize/huff                {:mvn/version "0.2.12"}
+           io.github.tonsky/datascript-storage-sql {:mvn/version "2.0.0"}
+           metosin/malli                           {:mvn/version "0.17.0"}
+           metosin/reitit                          {:mvn/version "0.8.0"}
+           mount/mount                             {:mvn/version "0.1.21"}
+           org.clojure/clojure                     {:mvn/version "1.12.0"}
+           org.xerial/sqlite-jdbc                  {:mvn/version "3.36.0.3"}
+           ring/ring-core                          {:mvn/version "1.9.0"}
+           ring/ring-jetty-adapter                 {:mvn/version "1.9.0"}}
  :aliases {:go {:main-opts ["-m" "user"]}}}
