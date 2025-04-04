@@ -25,7 +25,7 @@
 (let [*a (atom 0)] (defn inc! [] (swap! *a inc)))
 
 (defn home [_]
-  (response (page [:h1 "hi" (inc!)])))
+  (response (page [:h1 "hi guyse " (inc!)])))
 
 (defstate app
   :start
