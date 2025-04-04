@@ -78,6 +78,9 @@
 (defn login [conn screen-name magic-link]
   (let [user (screen-name->user @conn screen-name)]
     (cond
+      (not user)
+      "No user by that name."
+
       (not= magic-link (:user/magic-link user))
       "wrong link"
 
@@ -85,8 +88,9 @@
       "timed out"
 
       :else
-      (transact-and-store! conn [{:user/screen-name screen-name
-                                  :user/first-login-at (now!)}]))))
+      (transact-and-store! conn
+                           [{:user/screen-name screen-name
+                             :user/first-login-at (now!)}]))))
 
 (comment
 
