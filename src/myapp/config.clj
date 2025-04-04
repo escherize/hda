@@ -3,7 +3,9 @@
 
 (defstate config
   :start
-  {:jdbc-url
+  {:server {:port "3333"}
+
+   :jdbc-url
    "jdbc:sqlite:target/db.sqlite"
 
    :schema

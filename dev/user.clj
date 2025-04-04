@@ -1,2 +1,5 @@
 (ns user
-  (:require [myapp.core :refer [-main]]))
+  (:require [myapp.core :as core]))
+
+(defn -main [& args]
+  (apply core/-main args))

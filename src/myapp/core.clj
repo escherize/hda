@@ -1,12 +1,13 @@
 (ns myapp.core
   (:require [ring.adapter.jetty :refer [run-jetty]]
             [myapp.routes :as routes]
+            [myapp.config :refer [config]]
             [mount.core :as mount :refer [defstate]]))
 
 ;; Mount-managed state for the HTTP server
 (defstate http-server
   :start
-  (let [port 3000
+  (let [port (or (-> config :server :port) 3333)
         server (run-jetty #'routes/app {:port port :join? false})]
     (println "Starting HTTP server on port" port "...")
     server)

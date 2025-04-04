@@ -10,4 +10,5 @@
          com.cognitect/transit-clj               {:mvn/version "1.0.333"}
          io.github.escherize/huff                {:mvn/version "0.2.12"}
          metosin/malli                           {:mvn/version "0.17.0"}
-         metosin/reitit                          {:mvn/version "0.8.0"}}}
+         metosin/reitit                          {:mvn/version "0.8.0"}}
+ :aliases {:go {:main-opts ["-m" "user"]}}}
