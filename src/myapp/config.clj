@@ -4,7 +4,7 @@
 
 (defn get-config []
   (when-let [config-path (or (System/getenv "HDA_CONFIG") "hda_config.yml")]
-    (when-let [config-contents (slurp config-path)]
+    (when-let [config-contents (try (slurp config-path) (catch Exception _ nil))]
       (when-let [config-map (yaml/parse-string config-contents)]
         config-map))))
 
