@@ -7,7 +7,7 @@
 ;; Mount-managed state for the HTTP server
 (defstate http-server
   :start
-  (let [port (or (-> config :server :port) 3333)
+  (let [port (or (-> config :server :port) 3334)
         server (run-jetty #'routes/app {:port port :join? false})]
     (println "Starting HTTP server on port" port "...")
     server)
