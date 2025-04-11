@@ -5,28 +5,16 @@
 (def ^:const base58-alphabet
   "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz")
 
-(defn encode-base58
-  "Encodes a BigInteger into a Base58 string."
-  [^BigInteger num]
-  (let [base (BigInteger/valueOf 58)]
-    (loop [n num s ""]
-      (if (.equals n BigInteger/ZERO)
-        (if (empty? s)
-          (str (first base58-alphabet))
-          s)
-        (let [[quotient remainder] (.divideAndRemainder n base)]
-          (recur quotient (str (nth base58-alphabet (.intValue remainder)) s)))))))
-
-(defn generate-base58-id
-  "Generates a random Base58 encoded id using a 128-bit number."
-  []
-  (let [random-bytes (byte-array 16)  ; 16 bytes = 128 bits
-        sr (SecureRandom.)]
-    (.nextBytes sr random-bytes)
-    (encode-base58 (BigInteger. 1 random-bytes))))
+(def ^:const alphabet
+  "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz")
 
 (defn id
-  "Generates a magic link id with a prefix."
-  ([] (id "id"))
-  ([prefix]
-   (str prefix "_" (generate-base58-id))))
+  "Generates a magic id with a prefix."
+  ([] (id "id" 22))
+  ([prefix] (id prefix 22))
+  ([prefix n]
+   (str prefix (apply str (repeatedly n #(rand-nth base58-alphabet))))))
+
+(defn mini []
+  "Generates a mini id with a prefix."
+  (id (rand-nth alphabet) 5))
