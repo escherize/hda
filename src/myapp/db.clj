@@ -10,9 +10,8 @@
             ByteArrayInputStream]))
 
 (defstate datasource
-  :start
-  (doto (org.sqlite.SQLiteDataSource.)
-    (.setUrl (:jdbc-url config)))
+  :start (doto (org.sqlite.SQLiteDataSource.)
+           (.setUrl (:jdbc-url config)))
   :stop
   (println "Stopping datasource..."))
 
@@ -82,10 +81,10 @@
       "No user by that name."
 
       (not= magic-link (:user/magic-link user))
-      "wrong link"
+      "wrong link."
 
       (> (now!) (+ (:user/link-generated-at user) expiration-time))
-      "timed out"
+      "timed out."
 
       :else
       (transact-and-store! conn
@@ -99,8 +98,7 @@
   (screen-name->user @conn "person")
   ;; => #:user{:link-generated-at 1743656312, :magic-link "magic_9UMu6TmBvx92v5wM8g94hP", :screen-name "person"}
 
-  (login conn "person" "magic_9UMu6TmBvx92v5wM8g94hP")
-
+  (login conn "person" (:user/magic-link (screen-name->user @conn "person")))
 
   (mapv #(into [] %) (sort-by first (:eavt @conn)))
 

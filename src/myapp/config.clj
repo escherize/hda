@@ -17,6 +17,8 @@
      :jdbc-url
      "jdbc:sqlite:target/db.sqlite"
 
+     :dev/mode :dev ;; :prod ?
+
      :schema
      {:user/screen-name       {:db/unique :db.unique/identity}
       :user/magic-link        {}
@@ -27,3 +29,6 @@
       :todo/done?     {:db/type :db.type/boolean}
       :todo/done-date {:db/type :db.type/long}
       :todo/user      {:db/valueType :db.type/ref}}}))
+
+(defn dev? []
+  (= :dev (:dev/mode config)))
