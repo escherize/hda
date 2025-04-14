@@ -3,6 +3,7 @@
 *.log
 tmp/
 .clj-kondo/.cache/
+.clj-kondo/imports/
 .cpcache/
 .lsp/
 .nrepl-port
