@@ -44,28 +44,63 @@
    [:button.btn.btn-primary {:data-on-click "$input = ''"}
     "Reset"]])
 
+;; Login page components
+(defn login-header []
+  [:div.text-center
+   [:h2.text-3xl.font-extrabold.text-gray-900.dark:text-white "Welcome"]
+   [:p.mt-2.text-sm.text-gray-600.dark:text-gray-400 "Sign in or create your account"]])
+
+(defn email-input []
+  [:div
+   [:label.sr-only {:for "email"} "Email address"]
+   [:input.appearance-none.rounded-none.relative.block.w-full.px-3.py-2.border.border-gray-300.dark:border-gray-700.placeholder-gray-500.dark:placeholder-gray-400.text-gray-900.dark:text-white.rounded-t-md.focus:outline-none.focus:ring-indigo-500.focus:border-indigo-500.focus:z-10.sm:text-sm.bg-white.dark:bg-gray-700
+    {:type "email" :id "email" :name "email" :placeholder "Email address"
+     :data-bind "email" :required true :autocomplete "email"}]])
+
+(defn password-input []
+  [:div
+   [:label.sr-only {:for "password"} "Password"]
+   [:input.appearance-none.rounded-none.relative.block.w-full.px-3.py-2.border.border-gray-300.dark:border-gray-700.placeholder-gray-500.dark:placeholder-gray-400.text-gray-900.dark:text-white.focus:outline-none.focus:ring-indigo-500.focus:border-indigo-500.focus:z-10.sm:text-sm.bg-white.dark:bg-gray-700
+    {:type "password" :id "password" :name "password" :placeholder "Password"
+     :data-bind "password" :required true :autocomplete "current-password"}]])
+
+(defn screen-name-input []
+  [:div
+   [:label.sr-only {:for "screen-name"} "Screen Name (optional)"]
+   [:input.appearance-none.rounded-none.relative.block.w-full.px-3.py-2.border.border-gray-300.dark:border-gray-700.placeholder-gray-500.dark:placeholder-gray-400.text-gray-900.dark:text-white.rounded-b-md.focus:outline-none.focus:ring-indigo-500.focus:border-indigo-500.focus:z-10.sm:text-sm.bg-white.dark:bg-gray-700
+    {:type "text" :id "screen-name" :name "screen-name" :placeholder "Screen Name (optional)"
+     :data-bind "screenName"}]])
+
+(defn login-info-text []
+  [:div.text-sm.text-gray-600.dark:text-gray-400.p-4.bg-gray-100.dark:bg-gray-900.rounded-lg.space-y-2
+   [:p "Enter your email and password to sign in. New users will be registered automatically."]
+   [:p "Screen name is optional - one will be generated if not provided."]])
+
+(defn login-button []
+  [:div
+   [:button.group.relative.w-full.flex.justify-center.py-2.px-4.border.border-transparent.text-sm.font-medium.rounded-md.text-white.bg-indigo-600.hover:bg-indigo-700.focus:outline-none.focus:ring-2.focus:ring-offset-2.focus:ring-indigo-500.transition-colors.duration-300.ease-in-out
+    {:type "submit"
+     :data-attr-disabled "$email == '' || $password == ''"}
+    [:span.absolute.left-0.inset-y-0.flex.items-center.pl-3
+     [:svg.h-5.w-5.text-indigo-500.group-hover:text-indigo-400 
+      {:xmlns "http://www.w3.org/2000/svg" :viewBox "0 0 20 20" :fill "currentColor" :aria-hidden "true"}
+      [:path {:fill-rule "evenodd" :d "M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" :clip-rule "evenodd"}]]]
+    "Sign in / Register"]])
+
+(defn login-form []
+  [:form.mt-8.space-y-6 {:action "/login" :method "post"}
+   [:div.rounded-md.shadow-sm.-space-y-px
+    (email-input)
+    (password-input)
+    (screen-name-input)]
+   (login-info-text)
+   (login-button)])
+
 (defn login []
-  [:div.container.mt-5
-   [:h1.mb-4 "Login or Register"]
-   [:form.mb-4 {:action "/login" :method "post"}
-    [:div.mb-3
-     [:label.form-label {:for "email"} "Email"]
-     [:input.form-control {:type "email" :id "email" :name "email" :placeholder "Enter your email"
-                           :data-bind "email" :required true}]]
-    [:div.mb-3
-     [:label.form-label {:for "password"} "Password"]
-     [:input.form-control {:type "password" :id "password" :name "password" :placeholder "Enter your password"
-                           :data-bind "password" :required true}]]
-    [:div.mb-3
-     [:label.form-label {:for "screen-name"} "Screen Name (optional)"]
-     [:input.form-control {:type "text" :id "screen-name" :name "screen-name" :placeholder "Choose a screen name"
-                           :data-bind "screenName"}]]
-    [:div.mb-3
-     [:p.text-muted "Enter your email and password. If this is your first time, you'll be registered automatically."]
-     [:p.text-muted "Screen name is optional for new users. If not provided, one will be generated for you."]]
-    [:button.btn.btn-primary {:type "submit"
-                             :data-attr-disabled "$email == '' || $password == ''"}
-     "Login / Register"]]])
+  [:div.min-h-screen.flex.items-center.justify-center.bg-gradient-to-r.from-purple-500.to-blue-600.py-12.px-4.sm:px-6.lg:px-8
+   [:div.max-w-md.w-full.space-y-8.bg-white.dark:bg-gray-800.p-10.rounded-xl.shadow-2xl
+    (login-header)
+    (login-form)]])
 
 (defn top [content]
   [:html

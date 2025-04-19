@@ -4,6 +4,7 @@
          com.cognitect/transit-clj               {:mvn/version "1.0.333"}
          datascript/datascript                   {:mvn/version "1.7.4"}
          io.github.escherize/huff                {:mvn/version "0.2.12"}
+         io.github.tonsky/clj-reload             {:mvn/version "0.9.4"}
          io.github.tonsky/datascript-storage-sql {:mvn/version "2.0.0"}
          metosin/malli                           {:mvn/version "0.17.0"}
          metosin/reitit                          {:mvn/version "0.8.0"}
@@ -16,15 +17,15 @@
          ring/ring-jetty-adapter                 {:mvn/version "1.9.0"}
 
          datastar/http-kit      {:git/url   "https://github.com/starfederation/datastar/"
-                                 :git/sha   "9c36bae809b330d980fd74c87ab18b6de082e9e2"
+                                 :git/sha   "7830ea7bae8f15f0081782982e0ada940ce061d1"
                                  :deps/root "sdk/clojure/adapter-http-kit"}
          datastar/malli-schemas {:git/url   "https://github.com/starfederation/datastar/"
-                                 :git/sha   "9c36bae809b330d980fd74c87ab18b6de082e9e2"
+                                 :git/sha   "7830ea7bae8f15f0081782982e0ada940ce061d1"
                                  :deps/root "sdk/clojure/malli-schemas"}
          datastar/ring          {:git/url   "https://github.com/starfederation/datastar/"
-                                 :git/sha   "9c36bae809b330d980fd74c87ab18b6de082e9e2"
+                                 :git/sha   "7830ea7bae8f15f0081782982e0ada940ce061d1"
                                  :deps/root "sdk/clojure/adapter-ring"}
          datastar/sdk           {:git/url   "https://github.com/starfederation/datastar/"
-                                 :git/sha   "9c36bae809b330d980fd74c87ab18b6de082e9e2"
+                                 :git/sha   "7830ea7bae8f15f0081782982e0ada940ce061d1"
                                  :deps/root "sdk/clojure/sdk"}}
  :aliases {:go {:main-opts ["-m" "user"]}}}
