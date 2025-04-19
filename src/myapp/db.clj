@@ -49,8 +49,29 @@
     (d/store @conn)
     o))
 
+(defn create-user!
+  "Creates a new user with the given email, password, and optional screen name.
+   Returns the user data with the generated auth token."
+  [conn email password & [screen-name]]
+  (let [auth-token (id "auth")
+        now (now!)
+        screen-name (or screen-name (str "user-" (subs (id "") 0 8)))
+        user-data {:user/email email
+                 :user/password password
+                 :user/screen-name screen-name
+                 :user/auth-token auth-token
+                 :user/created-at now}]
+    (transact-and-store! conn [user-data])
+    {:email email
+     :screen-name screen-name
+     :auth-token auth-token}))
+
 (defn screen-name->user [db screen-name]
   (d/pull db [:user/screen-name
+              :user/email
+              :user/password
+              :user/auth-token
+              :user/created-at
               :user/magic-link
               :user/link-generated-at
               :user/first-login-at]
@@ -59,6 +80,78 @@
                          :where [?id :user/screen-name ?name]]
                        screen-name
                        db))))
+
+(defn email->user [db email]
+  (let [query-result (d/q '[:find ?id
+                           :in ?email $
+                           :where [?id :user/email ?email]]
+                         email
+                         db)
+        entity-id (ffirst query-result)]
+    (when entity-id
+      (d/pull db [:user/screen-name
+                 :user/email
+                 :user/password
+                 :user/auth-token
+                 :user/created-at]
+             entity-id))))
+
+(comment
+  (d/q '[:find ?email :in $ :where [_ :user/email ?email]] db)
+  ;; => #{["test@example.com"]}
+  )
+
+(defn auth-token->user [db auth-token]
+  (let [query-result (d/q '[:find ?id
+                           :in ?token $
+                           :where [?id :user/auth-token ?token]]
+                         auth-token
+                         db)
+        entity-id (ffirst query-result)]
+    (when entity-id
+      (d/pull db [:user/screen-name
+                 :user/email
+                 :user/auth-token
+                 :user/created-at]
+             entity-id))))
+                       
+;; This is a debug function that doesn't use "!" in the name
+(defn make-user
+  "Creates a new user without the ! in the function name, for REPL debugging."
+  [conn email password & [screen-name]]
+  (let [auth-token (id "auth")
+        now (now!)
+        screen-name (or screen-name (str "user-" (subs (id "") 0 8)))
+        user-data {:user/email email
+                 :user/password password
+                 :user/screen-name screen-name
+                 :user/auth-token auth-token
+                 :user/created-at now}]
+    (transact-and-store! conn [user-data])
+    {:email email
+     :screen-name screen-name
+     :auth-token auth-token}))
+
+(defn make-auto-user
+  "Creates a user with an auto-generated screen name for REPL debugging."
+  [conn email password]
+  (let [auto-name (str "user-" (subs (id "random") 0 8))]
+    (make-user conn email password auto-name)))
+
+(defn authenticate
+  "Authenticate user by email and password. If user doesn't exist, create a new one with the provided screen name.
+   Returns the user data with auth token."
+  [conn email password & [screen-name]]
+  (let [existing-user (email->user @conn email)]
+    (if existing-user
+      (if (= (:user/password existing-user) password)
+        {:email email
+         :screen-name (:user/screen-name existing-user)
+         :auth-token (:user/auth-token existing-user)}
+        {:error "Incorrect password"})
+      (if screen-name
+        (make-user conn email password screen-name)
+        (make-auto-user conn email password)))))
 
 (comment (screen-name->user @conn "person"))
 

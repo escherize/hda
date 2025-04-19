@@ -15,12 +15,9 @@
           (first (hik/parse-fragment
                    html-string)))))))
 
-
-
 (defn signal-example []
-  [:.
-   {:data-signalsf "{response: '', answer: 'bread'}" ;; json ok here
-    :data-computed-correct "$response.toLowerCase() == $answer"}
+  [:. {:data-signals "{response: '', answer: 'bread'}" ;; json ok here
+       :data-computed-correct "$response.toLowerCase() == $answer"}
    [:.#question "What do you put in a toaster?"]
    [:button {:data-on-click "$response = prompt('Answer:') ?? ''"} "BUZZ"]
    [:. {:data-show "$response != ''"} "You answered “" [:span {:data-text "$response"}] "”.\n"
@@ -47,6 +44,29 @@
    [:button.btn.btn-primary {:data-on-click "$input = ''"}
     "Reset"]])
 
+(defn login []
+  [:div.container.mt-5
+   [:h1.mb-4 "Login or Register"]
+   [:form.mb-4 {:action "/login" :method "post"}
+    [:div.mb-3
+     [:label.form-label {:for "email"} "Email"]
+     [:input.form-control {:type "email" :id "email" :name "email" :placeholder "Enter your email"
+                           :data-bind "email" :required true}]]
+    [:div.mb-3
+     [:label.form-label {:for "password"} "Password"]
+     [:input.form-control {:type "password" :id "password" :name "password" :placeholder "Enter your password"
+                           :data-bind "password" :required true}]]
+    [:div.mb-3
+     [:label.form-label {:for "screen-name"} "Screen Name (optional)"]
+     [:input.form-control {:type "text" :id "screen-name" :name "screen-name" :placeholder "Choose a screen name"
+                           :data-bind "screenName"}]]
+    [:div.mb-3
+     [:p.text-muted "Enter your email and password. If this is your first time, you'll be registered automatically."]
+     [:p.text-muted "Screen name is optional for new users. If not provided, one will be generated for you."]]
+    [:button.btn.btn-primary {:type "submit"
+                             :data-attr-disabled "$email == '' || $password == ''"}
+     "Login / Register"]]])
+
 (defn top [content]
   [:html
    [:head
@@ -60,7 +80,9 @@
     [:script {:src "https://unpkg.com/htmx.org@1.7.0"}]]
    [:body.bg-white.dark:bg-gray-800.text-black.dark:text-white
     content
-    [:hr]
-    [signal-example]
-    [:hr]
-    [input-example]]])
+    ;; Examples:
+    ;; [:hr]
+    ;; [signal-example]
+    ;; [:hr]
+    ;; [input-example]
+    ]])

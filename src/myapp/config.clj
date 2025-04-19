@@ -21,6 +21,10 @@
 
      :schema
      {:user/screen-name       {:db/unique :db.unique/identity}
+      :user/email            {:db/unique :db.unique/identity}
+      :user/password         {}
+      :user/auth-token       {:db/unique :db.unique/identity}
+      :user/created-at       {:db/type :db.type/long}
       :user/magic-link        {}
       :user/link-generated-at {:db/type :db.type/long}
       :user/signup-at         {:db/type :db.type/long}
