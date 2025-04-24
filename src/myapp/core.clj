@@ -8,7 +8,9 @@
 (defstate http-server
   :start
   (let [port (or (-> config :server :port) 3334)
-        server (run-jetty #'routes/app {:port port :join? false})]
+        server (run-jetty #'routes/app {:port port
+                                        :join? false
+                                        :async? true})]
     (println "Starting HTTP server on port" port "...")
     server)
   :stop

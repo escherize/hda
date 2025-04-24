@@ -1,16 +1,28 @@
 ;; deps.edn
-{:paths   ["dev" "src" "test"]
- :deps    {clj-commons/clj-yaml                    {:mvn/version "1.0.29"}
-           com.cognitect/transit-clj               {:mvn/version "1.0.333"}
-           datascript/datascript                   {:mvn/version "1.7.4"}
-           io.github.escherize/huff                {:mvn/version "0.2.12"}
-           io.github.tonsky/datascript-storage-sql {:mvn/version "2.0.0"}
-           metosin/malli                           {:mvn/version "0.17.0"}
-           metosin/reitit                          {:mvn/version "0.8.0"}
-           mount/mount                             {:mvn/version "0.1.21"}
-           nrepl/nrepl                             {:mvn/version "0.9.0"}
-           org.clojure/clojure                     {:mvn/version "1.12.0"}
-           org.xerial/sqlite-jdbc                  {:mvn/version "3.36.0.3"}
-           ring/ring-core                          {:mvn/version "1.9.0"}
-           ring/ring-jetty-adapter                 {:mvn/version "1.9.0"}}
+{:paths ["dev" "src" "test"]
+ :deps  {clj-commons/clj-yaml                    {:mvn/version "1.0.29"}
+         com.cognitect/transit-clj               {:mvn/version "1.0.333"}
+         datascript/datascript                   {:mvn/version "1.7.4"}
+         io.github.escherize/huff                {:mvn/version "0.2.12"}
+         io.github.tonsky/datascript-storage-sql {:mvn/version "2.0.0"}
+         metosin/malli                           {:mvn/version "0.17.0"}
+         metosin/reitit                          {:mvn/version "0.8.0"}
+         mount/mount                             {:mvn/version "0.1.21"}
+         nrepl/nrepl                             {:mvn/version "0.9.0"}
+         org.clojure/clojure                     {:mvn/version "1.12.0"}
+         org.xerial/sqlite-jdbc                  {:mvn/version "3.36.0.3"}
+         ring/ring-core                          {:mvn/version "1.9.0"}
+         ring/ring-jetty-adapter                 {:mvn/version "1.9.0"}
+         com.layerware/hugsql                    {:mvn/version "0.5.3"}
+         seancorfield/next.jdbc                  {:mvn/version "1.2.659"}
+         compojure/compojure                     {:mvn/version "1.7.1"}
+         ring/ring                               {:mvn/version "1.14.1"}
+         hikari-cp/hikari-cp                     {:mvn/version "3.2.0"}
+         cheshire/cheshire                       {:mvn/version "6.0.0"}
+         datastar/sdk                            {:git/url   "https://github.com/starfederation/datastar/"
+                                                  :git/sha   "8b849864109e7a5dd4da40b00269125837611ac2"
+                                                  :deps/root "sdk/clojure/sdk"}
+         datastar/ring                           {:git/url   "https://github.com/starfederation/datastar/"
+                                                  :git/sha   "8b849864109e7a5dd4da40b00269125837611ac2"
+                                                  :deps/root "sdk/clojure/adapter-ring"}}
  :aliases {:go {:main-opts ["-m" "user"]}}}

@@ -1,5 +1,6 @@
 (ns user
   (:require [myapp.core :as core]
+            [mount.core :as mount]
             [nrepl.server :as nrepl]))
 
 (defn start-nrepl-server []
