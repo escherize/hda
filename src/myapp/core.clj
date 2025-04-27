@@ -2,7 +2,8 @@
   (:require [ring.adapter.jetty :refer [run-jetty]]
             [myapp.routes :as routes]
             [myapp.config :refer [config]]
-            [mount.core :as mount :refer [defstate]]))
+            [mount.core :as mount :refer [defstate]])
+  (:gen-class))
 
 ;; Mount-managed state for the HTTP server
 (defstate http-server
