@@ -1,0 +1,34 @@
+{:tasks
+ {:init (do (def log (Object.))
+            (def app-name "hda-0.0.1-standalone.jar"))
+  :enter (locking log (println (str "Running " (:name (current-task)) "...")))
+  clean {:doc "Removes target folder"
+         :requires ([babashka.fs :as fs])
+         :task (fs/delete-tree "target")}
+  build {:task (clojure "-T:build uber")}
+  upload {:task (shell (apply str
+                              ["rsync -e \"ssh\" -avz "
+                               (str "target/" app-name)
+                               " bcm@192.168.68.52:~/dv/hda/"]))}
+  start-server
+  {:requires ([babashka.process :as process])
+   :task (do (println "Restarting application on remote server...")
+             (let [ssh-cmd (str "cd dv/hda/ && "
+                                "PID=$(pgrep -f " app-name " || true) && "
+                                "if [ -n \"$PID\" ]; then "
+                                "  echo 'Killing process ' $PID && kill $PID && sleep 5; "
+                                "fi && "
+                                "echo 'Starting app...' && "
+                                "echo '-----deploy-----' > app.log && "
+                                "nohup java -jar " app-name " > app.log &")]
+               (let [{:keys [out err exit]}
+                     (process/shell "ssh" "bcm@192.168.68.52" ssh-cmd)]
+                 (when (not (zero? exit)) (println "Error restarting app:" err))
+                 (println out))))}
+
+  logs {:requires ([babashka.process :as process])
+        :task (do (process/shell "ssh" "bcm@192.168.68.52"
+                                 "cd dv/hda/"
+                                 "&& tail -f app.log")
+                  (deref (promise)))}
+  deploy {:depends [clean build upload start-server logs]}}}
