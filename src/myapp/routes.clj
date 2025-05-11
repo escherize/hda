@@ -48,7 +48,14 @@
         [:. {:data-show "!$correct"} "nope: it is '" [:span {:data-text "$answer"}] "'."]]])))
 
 (def colors
-  ["black" "red" "orange" "yellow" "green" "blue" "indigo" "violet"])
+  ["#2D4F5C" ;;- Deep teal-blue
+   "#3A5768" ;;- Dark cyan-blue
+   "#475F74" ;;- Medium steel blue
+   "#546880" ;;- Cooler blue-gray
+   "#61708C" ;;- Soft lavender-blue
+   "#6E7898" ;;- Light periwinkle-blue
+   "#FF6B2B" ;;- Vibrant fire orange
+   ])
 
 (defn color-n [n]
   (nth colors (mod n (count colors))))
@@ -62,16 +69,17 @@
 
 (defn cycle-color [color]
   (let [n (color->n color)]
-    (if n
-      (color-n (inc n))
-      color)))
+    (if n (color-n (inc n)) color)))
 
 (let [t (atom 0)]
-(defn inc! []
-  (swap! t inc)))
+  (defn inc! [] (swap! t inc)))
 
-(def rows 30)
-(def cols 30)
+(def rows 50)
+(def cols 50)
+
+(defn in-bounds? [rows cols x y]
+  (and (>= x 0) (< x rows) (>= y 0) (< y cols)))
+
 (def state (atom
              (apply merge-with merge
                     (for [x (range rows)
@@ -81,15 +89,14 @@
 (defn cell-id [x y]
   (str "cell_" x "_" y))
 
-(defn cell [x y color]
+(defn cell [x y bg-color]
   [:div {:id (cell-id x y)
-         :data-on-mouseenter (d*/sse-get (str "/bump?x=" x "&y=" y))
-         :data-on-mouseexit (d*/sse-get (str "/bump?x=" x "&y=" y))
+         ;; :data-on-mouseenter (d*/sse-get (str "/bump?x=" x "&y=" y))
+         ;; :data-on-mouseexit (d*/sse-get (str "/bump?x=" x "&y=" y))
          :data-on-click (d*/sse-get (str "/bump?x=" x "&y=" y))
          :style {:cursor :crosshair
                  :aspect-ratio "1"
-                 :background-color color
-                 :border-radius "1px"
+                 :background-color bg-color
                  ;; :border "1px solid white"
                  }}
    " "])
@@ -117,7 +124,8 @@
   (atom {}))
 
 (defn broadcast-fragment! [fragment]
-  (println "\nbroadcasting fragment: " fragment)
+  (when (> (rand) 0.99)
+    (println "\nbroadcasting fragment: " fragment))
   (future
     (doseq [[_user c] @*connections]
       (try
@@ -146,7 +154,6 @@
 
   (def x 1)
   (def y 2)
-  (def color "red")
 
   ;; TODO: what the hell do we build with it?
   ;; TODO: learn sse metaphysics
@@ -168,7 +175,9 @@
                 (swap! *connections disj sse)
                 (println "closed connection"))})))
 
-(defn bump-cell [{params :params :as req} respond raise]
+(defn bump-cell [x y] (swap! state update-in [x y] cycle-color))
+
+(defn bump-cell-handler [{params :params :as req} respond raise]
   (def bcreq req)
   (let [{:strs [x y datastar]} params
         {:keys [user_id]} (json/parse-string datastar keyword)
@@ -185,12 +194,28 @@
                                (swap! *connections dissoc user_id)
                                (println "closed connection" user_id))}))]
       ;; add the connection before upating state
-      (swap! state update-in [x y] cycle-color)
+      (future
+        (bump-cell x y)
+        (doseq [x' (range (- x 3) (+ x 4))
+                y' (range (- y 3) (+ y 4))
+                :when (in-bounds? rows cols x' y')]
+          (bump-cell x' y'))
+        (doseq [x' (range (- x 2) (+ x 3))
+                y' (range (- y 2) (+ y 3))
+                :when (in-bounds? rows cols x' y')]
+          (bump-cell x' y'))
+        (doseq [x' (range (- x 1) (+ x 2))
+                y' (range (- y 1) (+ y 2))
+                :when (in-bounds? rows cols x' y')]
+          (bump-cell x' y')))
       (respond resp))))
 
 (defroutes routes
   (GET "/" req (home req))
-  (GET "/bump" [] bump-cell))
+  (GET "/bump" [] bump-cell-handler)
+  ;; Then host public files from resources:
+
+  (route/resources "/static"))
 
 (def app
   (-> routes
